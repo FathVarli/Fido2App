@@ -1,0 +1,38 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <section>
+            <form id="account" method="post">
+                <h2>Use a local account to log in.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating">
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control" value="fatih@gmail.com" autocomplete="username" aria-required="true"/>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                
+                <div>
+                    <button id="loginSubmit" type="button" class="w-100 btn btn-lg btn-primary mt-2">Log in</button>
+                </div>
+                <div>
+                    <p>
+                        <a asp-controller="Home" asp-action="Register">Register as a new user</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+   
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="@Url.Content("~/js/login.passwordless.js")"></script>
+}

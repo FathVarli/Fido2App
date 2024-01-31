@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.17\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.17\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNetCore.Identity">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.17\Microsoft.AspNetCore.Identity.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Extensions.Identity.Core">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.17\Microsoft.Extensions.Identity.Core.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fido2" Version="2.0.2" />
+        <PackageReference Include="Fido2.AspNet" Version="2.0.2" />
+        <PackageReference Include="IdentityServer4" Version="4.1.2" />
+    </ItemGroup>
+
+</Project>
