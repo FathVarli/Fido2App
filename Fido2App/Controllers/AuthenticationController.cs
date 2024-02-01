@@ -60,7 +60,7 @@ namespace Fido2App.Controllers
                 HttpContext?.Response.Cookies.Append("fido2.attestationOptions", content, cookieOptions);
 
                 // 4. return options to client
-                return Json(result.Data);
+                return Json(new {isSuccess = true, data = result.Data});
             }
             _logger.Log(LogLevel.Error,result.Message);
             return Json(new {isSuccess = false , message = result.Message});
@@ -89,7 +89,7 @@ namespace Fido2App.Controllers
             
             if (result.Status == StatusTypeEnum.Success)
             {
-                return Json(result.Data);
+                return Json(new {isSuccess = true, data = result.Data});
             }
 
             _logger.Log(LogLevel.Error,result.Message);
@@ -124,7 +124,7 @@ namespace Fido2App.Controllers
                 HttpContext?.Response.Cookies.Append("fido2.assertionOptions", content, cookieOptions);
 
                 // return options to client
-                return Json(result.Data);
+                return Json(new {isSuccess = true, data = result.Data});
             }
             _logger.Log(LogLevel.Error,result.Message);
             return Json(new {isSuccess = false , message = result.Message});
@@ -156,7 +156,7 @@ namespace Fido2App.Controllers
             
             if (result.Status == StatusTypeEnum.Success && result.Data.Status.Equals("ok"))
             {
-                return Json(result.Data);
+                return Json(new {isSuccess = true, data = result.Data});
             }
 
             _logger.Log(LogLevel.Error,result.Message);

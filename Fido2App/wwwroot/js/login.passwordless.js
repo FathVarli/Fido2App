@@ -11,9 +11,9 @@ async function handleSignInSubmit(event) {
     }
 
     // send to server for registering
-    let makeAssertionOptions;
+    let assertionOptionsResponse;
     try {
-        makeAssertionOptions = await fetchAssertionOptions(assertionOptionsViewModel);
+        assertionOptionsResponse = await fetchAssertionOptions(assertionOptionsViewModel);
         
     } catch (e) {
         console.error(e);
@@ -21,10 +21,13 @@ async function handleSignInSubmit(event) {
         showErrorAlert(msg);
     }
 
-    if (!makeAssertionOptions?.isSuccess){
-        showErrorAlert(makeAssertionOptions?.message);
+    if (!assertionOptionsResponse?.isSuccess){
+        showErrorAlert(assertionOptionsResponse?.message);
         return;
     }
+
+
+    let makeAssertionOptions = assertionOptionsResponse.data;
     
     console.log("Assertion Options Object", makeAssertionOptions);
 
@@ -92,7 +95,7 @@ async function fetchAssertionOptions(requestData) {
  * @param {any} assertedCredential
  */
 async function verifyAssertionWithServer(assertedCredential) {
-
+    debugger;
     // Move data into Arrays incase it is super long
     let authData = new Uint8Array(assertedCredential.response.authenticatorData);
     let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
@@ -110,18 +113,21 @@ async function verifyAssertionWithServer(assertedCredential) {
         }
     };
 
-    let response;
+    let credentialResponse;
     try {
-    response = loginCredentialWithServer(data)
+        credentialResponse = await loginCredentialWithServer(data)
     } catch (e) {
         showErrorAlert("Request to server failed", e);
         throw e;
     }
 
-    if (!response?.isSuccess){
-        showErrorAlert(response?.message);
+    if (!credentialResponse?.isSuccess){
+        showErrorAlert(credentialResponse?.message);
         return;
     }
+    
+    let response = credentialResponse.data;
+    
 
     console.log("Assertion Object", response);
 

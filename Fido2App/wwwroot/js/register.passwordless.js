@@ -26,9 +26,9 @@ async function handleRegisterSubmit(event) {
     }
 
     // send to server for registering
-    let makeCredentialOptions;
+    let credentialOptionsResponse;
     try {
-        makeCredentialOptions = await fetchMakeCredentialOptions(requestData);
+        credentialOptionsResponse = await fetchMakeCredentialOptions(requestData);
         
     } catch (e) {
         console.error(e);
@@ -36,10 +36,12 @@ async function handleRegisterSubmit(event) {
         showErrorAlert(msg);
     }
     
-    if (!makeCredentialOptions?.isSuccess){
-        showErrorAlert(makeCredentialOptions?.message);
+    if (!credentialOptionsResponse?.isSuccess){
+        showErrorAlert(credentialOptionsResponse?.message);
         return;
     }
+    
+    let makeCredentialOptions = credentialOptionsResponse.data;
 
     console.log("Credential Options Object", makeCredentialOptions);
 
@@ -136,17 +138,19 @@ async function registerNewCredential(newCredential) {
         },
     };
 
-    let response;
+    let credentialResponse;
     try {
-        response = await registerCredentialWithServer(data);
+        credentialResponse = await registerCredentialWithServer(data);
     } catch (e) {
         showErrorAlert(e);
     }
 
-    if (!response?.isSuccess){
+    if (!credentialResponse?.isSuccess){
         showErrorAlert(response?.message);
         return;
     }
+
+    let response = credentialResponse.data;
 
     console.log("Credential Object", response);
 
