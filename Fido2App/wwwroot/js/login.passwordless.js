@@ -20,6 +20,11 @@ async function handleSignInSubmit(event) {
         let msg = "Something wen't really wrong";
         showErrorAlert(msg);
     }
+
+    if (!makeAssertionOptions?.isSuccess){
+        showErrorAlert(makeAssertionOptions?.message);
+        return;
+    }
     
     console.log("Assertion Options Object", makeAssertionOptions);
 
@@ -107,21 +112,15 @@ async function verifyAssertionWithServer(assertedCredential) {
 
     let response;
     try {
-        let res = await fetch("/makeAssertion", {
-            method: 'POST', // or 'PUT'
-            body: JSON.stringify({
-                authenticatorAssertionRawResponse : data
-            }), // data can be `string` or {object}!
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        response = await res.json();
+    response = loginCredentialWithServer(data)
     } catch (e) {
         showErrorAlert("Request to server failed", e);
         throw e;
+    }
+
+    if (!response?.isSuccess){
+        showErrorAlert(response?.message);
+        return;
     }
 
     console.log("Assertion Object", response);
@@ -142,4 +141,19 @@ async function verifyAssertionWithServer(assertedCredential) {
         timer: 2000
     });
     
+}
+
+async function loginCredentialWithServer(requestData) {
+    let res = await fetch("/makeAssertion", {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify({
+            authenticatorAssertionRawResponse : requestData
+        }), // data can be `string` or {object}!
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    });
+
+    return await res.json();
 }

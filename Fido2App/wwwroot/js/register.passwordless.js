@@ -14,7 +14,7 @@ async function handleRegisterSubmit(event) {
     let user_verification = "preferred";
 
     // possible values: true,false
-    let require_resident_key = false;
+    let require_resident_key = true;
     
     let requestData = {
         username : username,
@@ -34,6 +34,11 @@ async function handleRegisterSubmit(event) {
         console.error(e);
         let msg = "Something wen't really wrong";
         showErrorAlert(msg);
+    }
+    
+    if (!makeCredentialOptions?.isSuccess){
+        showErrorAlert(makeCredentialOptions?.message);
+        return;
     }
 
     console.log("Credential Options Object", makeCredentialOptions);
@@ -136,6 +141,11 @@ async function registerNewCredential(newCredential) {
         response = await registerCredentialWithServer(data);
     } catch (e) {
         showErrorAlert(e);
+    }
+
+    if (!response?.isSuccess){
+        showErrorAlert(response?.message);
+        return;
     }
 
     console.log("Credential Object", response);

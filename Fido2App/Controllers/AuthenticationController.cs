@@ -31,6 +31,8 @@ namespace Fido2App.Controllers
             _protector = provider.CreateProtector("passwordless");
         }
 
+        #region public async Task<JsonResult> MakeCredentialOptions([FromBody] MakeCredentialOptionsViewModel makeCredentialOptionsViewModel)
+
         [HttpPost]
         [Route("/makeCredentialOptions")]
         public async Task<JsonResult> MakeCredentialOptions([FromBody] MakeCredentialOptionsViewModel makeCredentialOptionsViewModel)
@@ -61,9 +63,13 @@ namespace Fido2App.Controllers
                 return Json(result.Data);
             }
             _logger.Log(LogLevel.Error,result.Message);
-            return Json(new {});
+            return Json(new {isSuccess = false , message = result.Message});
         }
-        
+
+        #endregion
+
+        #region public async Task<IActionResult> MakeCredential([FromBody] MakeCredentialViewModel makeCredentialViewModel)
+
         [HttpPost]
         [Route("/makeCredential")]
         public async Task<IActionResult> MakeCredential([FromBody] MakeCredentialViewModel makeCredentialViewModel)
@@ -86,10 +92,15 @@ namespace Fido2App.Controllers
                 return Json(result.Data);
             }
 
-            return BadRequest();
+            _logger.Log(LogLevel.Error,result.Message);
+            return Json(new {isSuccess = false , message = result.Message});
 
         }
-        
+
+        #endregion
+
+        #region public async Task<JsonResult> AssertionOptions([FromBody] AssertionOptionsViewModel assertionOptionsViewModel)
+
         [HttpPost]
         [Route("/assertionOptions")]
         public async Task<JsonResult> AssertionOptions([FromBody] AssertionOptionsViewModel assertionOptionsViewModel)
@@ -116,16 +127,23 @@ namespace Fido2App.Controllers
                 return Json(result.Data);
             }
             _logger.Log(LogLevel.Error,result.Message);
-            return Json(new {});
+            return Json(new {isSuccess = false , message = result.Message});
         }
-        
+
+        #endregion
+
+        #region public async Task<IActionResult> MakeAssertion([FromBody] MakeAssertionViewModel makeAssertionViewModel)
+
         [HttpPost]
         [Route("/makeAssertion")]
         public async Task<IActionResult> MakeAssertion([FromBody] MakeAssertionViewModel makeAssertionViewModel)
         {
             // 1. get the options we sent the client
             if (string.IsNullOrEmpty(HttpContext?.Request.Cookies["fido2.assertionOptions"]))
-                return BadRequest();
+            {
+                _logger.Log(LogLevel.Error,"AssertionOptions not found!");
+                return Json(new {isSuccess = false , message = "AssertionOptions not found!"});
+            }
             
             var jsonOptions = _protector.Unprotect(HttpContext?.Request.Cookies["fido2.assertionOptions"]!);
             var options = Fido2NetLib.AssertionOptions.FromJson(jsonOptions);
@@ -141,10 +159,12 @@ namespace Fido2App.Controllers
                 return Json(result.Data);
             }
 
-            return Json(new {});
+            _logger.Log(LogLevel.Error,result.Message);
+            return Json(new {isSuccess = false , message = result.Message});
 
         }
 
-
+        #endregion
+        
     }
 }

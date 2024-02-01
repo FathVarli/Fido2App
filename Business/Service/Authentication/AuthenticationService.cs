@@ -42,13 +42,13 @@ namespace Business.Service.Authentication
         {
             if (string.IsNullOrEmpty(makeCredentialOptionsRequestDto.Username))
             {
-                return new ErrorDataResult<CredentialCreateOptions>("");
+                return new ErrorDataResult<CredentialCreateOptions>("Username not null!");
             }
 
             var isUsernameExist = await _userManager.FindByEmailAsync(makeCredentialOptionsRequestDto.Username);
             if (isUsernameExist is not null)
             {
-                return new ErrorDataResult<CredentialCreateOptions>("");
+                return new ErrorDataResult<CredentialCreateOptions>("Username already exists");
             }
             
             var fidoUser = new Fido2User
@@ -181,7 +181,7 @@ namespace Business.Service.Authentication
             
             // 3. Create options
             var userVerificationRequirement = string.IsNullOrEmpty(assertionOptionsRequestDto.UserVerification) 
-                ? UserVerificationRequirement.Discouraged 
+                ? UserVerificationRequirement.Preferred 
                 : assertionOptionsRequestDto.UserVerification.ToEnum<UserVerificationRequirement>();
             
             var options = _fido2.GetAssertionOptions(
